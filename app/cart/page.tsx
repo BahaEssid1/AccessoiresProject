@@ -1,83 +1,71 @@
-"use client"
-import React, { useState } from "react";
+// app/cart/page.tsx
+"use client";
 
-interface CartItem {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-}
+import { useCart } from "@/context/CartContext"; // Import the useCart hook
 
-const Cart = () => {
-    const [cartItems, setCartItems] = useState<CartItem[]>([
-        { id: 1, name: "Wireless Earbuds", price: 50, quantity: 1 },
-        { id: 2, name: "Phone Case - Galaxy S22", price: 20, quantity: 2 },
-    ]);
+const CartPage = () => {
+  const { cartItems, getTotalPrice, removeFromCart } = useCart(); // Access cart items and functions
 
-    const handleQuantityChange = (id: number, newQuantity: number) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) =>
-                item.id === id ? { ...item, quantity: newQuantity } : item
-            )
-        );
-    };
-
-    const handleRemoveItem = (id: number) => {
-        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-    };
-
-    const calculateTotal = () => {
-        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    };
-
+  if (cartItems.length === 0) {
     return (
-        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
-            <h1>Shopping Cart</h1>
-            {cartItems.length === 0 ? (
-                <p>Your cart is empty!</p>
-            ) : (
-                <div>
-                    {cartItems.map((item) => (
-                        <div key={item.id} style={{ marginBottom: "15px" }}>
-                            <h3>{item.name}</h3>
-                            <p>Price: ${item.price.toFixed(2)}</p>
-                            <label>
-                                Quantity:
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={item.quantity}
-                                    onChange={(e) =>
-                                        handleQuantityChange(item.id, parseInt(e.target.value))
-                                    }
-                                    style={{ marginLeft: "5px", width: "50px" }}
-                                />
-                            </label>
-                            <button
-                                onClick={() => handleRemoveItem(item.id)}
-                                style={{ marginLeft: "10px", color: "red" }}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-                    <h2>Total: ${calculateTotal().toFixed(2)}</h2>
-                    <button
-                        onClick={() => alert("Proceeding to checkout")}
-                        style={{
-                            padding: "10px 20px",
-                            backgroundColor: "#007bff",
-                            color: "white",
-                            border: "none",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Proceed to Checkout
-                    </button>
-                </div>
-            )}
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <h1 className="text-2xl text-gray-900">Your cart is empty</h1>
+      </div>
     );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-screen-xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Your Cart</h1>
+
+        <div className="space-y-6">
+          {/* Display each item in the cart */}
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between p-4 bg-white rounded-md shadow-sm"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="w-16 h-16 object-cover rounded-md"
+                />
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">{item.title}</h2>
+                  <p className="text-sm text-gray-500">{item.details}</p>
+                  <p className="text-lg font-semibold text-gray-900">${item.price}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => removeFromCart(item.id)} // Handle removing the item
+                className="text-sm text-red-600 hover:text-red-800"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Cart Summary */}
+        <div className="mt-8 p-4 bg-white rounded-md shadow-sm flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-gray-900">Total Price:</h2>
+          <span className="text-xl font-bold text-gray-900">${getTotalPrice()}</span>
+        </div>
+
+        {/* Proceed to Checkout button */}
+        <div className="mt-6">
+          <button
+            className="w-full py-3 bg-blue-600 text-white text-lg font-semibold rounded-md hover:bg-blue-700"
+          >
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default Cart;
+export default CartPage;

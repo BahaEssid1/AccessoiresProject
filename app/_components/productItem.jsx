@@ -1,14 +1,12 @@
-import React from 'react';
 
-function productItem() {
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+function ProductItem({ product }) {
   return (
-    <a
-      href="#"
-      className="group relative block overflow-hidden max-w-md mx-auto rounded-lg shadow-lg hover:shadow-xl transition-all" // Changed max-w-xs to max-w-md
-    >
-      <button
-        className="absolute end-4 top-4 z-10 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75"
-      >
+    <Link href={`/product-details/${product?.id}`} className="group relative block overflow-hidden">
+      <button className="absolute end-4 top-4 z-10 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75">
         <span className="sr-only">Wishlist</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -28,38 +26,27 @@ function productItem() {
 
       <img
         src="https://images.unsplash.com/photo-1599481238640-4c1288750d7a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2664&q=80"
-        alt=""
-        className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72 rounded-t-lg"
+        alt="Product Image"
+        className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72 rounded-lg shadow-lg group-hover:rounded-lg"
       />
 
-      <div
-        className="relative border border-gray-100 bg-white p-6 rounded-b-lg"
-        style={{
-          clipPath: 'polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%)', // Zigzag shape
-        }}
-      >
-        {/* Replace span text with image */}
-        <img 
-          src="/new2.png" 
-          alt="New" 
-          className="h-8 w-auto" // Adjust size of the image
-        />
-        <h3 className="mt-4 text-lg font-medium text-gray-900">Robot Toy</h3>
-        <p className="mt-1.5 text-sm text-gray-700">$14.99</p>
-        <form className="mt-4 flex justify-center">
-  <button
-    className="block w-2/3 rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105"
-    style={{
-      marginBottom: '10px', // Ensure no clipping of button at the bottom
-    }}
-  >
-    Add to Cart
-  </button>
-</form>
 
+      <div className="relative border border-gray-100 bg-white p-6 rounded-lg shadow-lg">
+        <span className="whitespace-nowrap bg-yellow-400 px-3 py-1.5 text-xs font-medium">New</span>
+
+        <h3 className="mt-4 text-lg font-medium text-gray-900">{product?.attributes?.title}</h3>
+
+        <p className="mt-1.5 text-sm text-gray-700">${product?.attributes?.price}</p>
+
+        <form className="mt-4">
+          <button className="block w-full rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105">
+            Add to Cart
+          </button>
+        </form>
       </div>
-    </a>
+
+    </Link>
   );
 }
 
-export default productItem;
+export default ProductItem;

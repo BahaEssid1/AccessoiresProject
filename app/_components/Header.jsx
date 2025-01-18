@@ -1,7 +1,12 @@
-import React from 'react';
-import { FaUser, FaShoppingCart } from 'react-icons/fa'; // Import the icons
+"use client"
+import Link from 'next/link'; // Import the Link component
+import { FaUser, FaShoppingCart } from 'react-icons/fa'; // Import icons
+import { useCart } from '@/context/CartContext'; // Import the cart context
 
 function Header() {
+  const { getTotalItems } = useCart(); // Get the total number of items in the cart
+  const totalItems = getTotalItems(); // Total items count
+
   return (
     <header className="bg-gray-900 shadow-xl mb-2">
       <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
@@ -15,22 +20,26 @@ function Header() {
           <nav aria-label="Global" className="hidden md:block">
             <ul className="flex items-center gap-6 text-sm">
               <li>
-                <a className="text-white transition hover:text-orange-500" href="#">Home</a>
+                <Link href="/" className="text-white transition hover:text-orange-500">Home</Link>
               </li>
-
               <li>
                 <a className="text-white transition hover:text-orange-500" href="#">About Us</a>
               </li>
             </ul>
           </nav>
 
-          {/* Search and Dropdown Section */}
           <div className="flex items-center">
             <div className="flex">
               <select
                 className="bg-gray-50 text-gray-900 border border-gray-300 rounded-l-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                onChange={(e) => {
+                  const selectedCategory = e.target.value;
+                  if (selectedCategory) {
+                    window.location.href = `/categories/${selectedCategory}`;
+                  }
+                }}
               >
-                <option value="">All Accessories</option>
+                <option value="">All Categories</option>
                 <option value="phone-cases">Phone Cases</option>
                 <option value="chargers">Chargers</option>
                 <option value="screen-protectors">Screen Protectors</option>
@@ -47,42 +56,35 @@ function Header() {
             </div>
           </div>
 
-          {/* User icon and Cart icon */}
-          <div className="flex items-center gap-4">
-            <div className="sm:flex sm:gap-4">
-              
-
-              {/* Cart Icon (Panier) */}
-              <a
-                className="block   p-2.5 text-blue-500 transition  hover:text-blue-700"
-                href="#"
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Link
+                href="/cart"
+                className="relative block rounded-full bg-[#E5E7EB] p-2.5 text-gray-900 transition hover:bg-orange-500 hover:text-white"
               >
                 <FaShoppingCart size={24} />
-              </a>
-              {/* User Icon */}
-              <a
-                className="block rounded-full bg-[#E5E7EB] p-2.5 text-gray-900 transition hover:bg-orange-500 hover:text-white"
-                href="#"
-              >
-                <FaUser size={24} />
-              </a>
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-2 text-xs font-semibold text-white bg-orange-600 rounded-full px-2">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+              <Link href="/cart" className="text-white text-sm font-medium">
+                Cart
+              </Link>
             </div>
 
-            <button
-              className="block rounded bg-[#E5E7EB] p-2.5 text-gray-600 transition hover:bg-[#71c55d] hover:text-white md:hidden"
-            >
-              <span className="sr-only">Toggle menu</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="size-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="block rounded-full bg-[#E5E7EB] p-2.5 text-gray-900 transition hover:bg-orange-500 hover:text-white"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+                <FaUser size={24} />
+              </Link>
+              <Link href="/login" className="text-white text-sm font-medium">
+                Connection
+              </Link>
+            </div>
           </div>
         </div>
       </div>
